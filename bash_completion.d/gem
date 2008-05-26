@@ -1,14 +1,17 @@
 GEM_LIST_CACHE=/tmp/gem_list.cache  # Gem cache file
 
 _fetch_gem_list () {
-    $(gem list -r | grep -v "REMOTE GEMS" | grep -v "Bulk updating" | awk 'BEGIN {ORS=" "} { print $1 | "sort"}' > $GEM_LIST_CACHE)
+    $(gem list -r | grep -v 'REMOTE GEMS\|[Uu]pdating' | awk 'BEGIN {ORS=" "} { print $1 | "sort"}' | grep -v '\.+' > $GEM_LIST_CACHE)
 }
 
 _get_gem_list () {
 
     ONE_DAY_AGO=($(date +%s) - 86400)             # In seconds
 
-    if [ -f $GEM_LIST_CACHE ]; then
+    # We check the gems list cache file exists and is bigger than 4k
+    # (minimum corruption check)
+    if [ -f $GEM_LIST_CACHE ] && [ $(ls -l $GEM_LIST_CACHE|awk '{print $5}') -gt 4096 ]
+    then
 	file_change_date=$(stat $GEM_LIST_CACHE | grep Change | cut -c 9-)
 	date_changed=$(date -d "$file_change_date" +%s)
 	if [ $date_changed -gt $ONE_DAY_AGO ]; then
@@ -47,7 +50,7 @@ _gem()
 	    return 0
 	    ;;
 	*)
-	;;
+	    ;;
     esac
 
     COMPREPLY=($(compgen -W "${commands}" -- ${cur}))
