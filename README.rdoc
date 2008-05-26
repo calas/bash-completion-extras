@@ -1,3 +1,29 @@
-== Gem Bash Autocompletion
+== Bash Completion Extras
 
-This is a simple bash completion script for the gem command 
+This package contains some simple scripts for bash completion. At the
+moment just gem auto-completion is a available.
+
+== Installation
+
+First clone this repository in the directory of your choice:
+
+  git clone git://gitorious.org/bash-completion-extras/mainline.git bash-completion-extras
+
+or
+
+  git clone git://github.com/calas/bash-completion-extras.git 
+
+Move to the cloned directory
+
+  cd bash-completion-extras
+
+Run the rake install task
+
+  rake install
+
+or
+
+  rake install force=true
+
+to override existing files.
+
