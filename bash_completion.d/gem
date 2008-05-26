@@ -1,7 +1,7 @@
 GEM_LIST_CACHE=/tmp/gem_list.cache  # Gem cache file
 
 _fetch_gem_list () {
-    $(gem list -r|grep -v 'REMOTE GEMS\|[Uu]pdating'|awk 'BEGIN {ORS=" "} { print $1}'|sort|grep -v '\.+' > $GEM_LIST_CACHE)
+    $(gem list -r|grep '([0-9].*)'|awk 'BEGIN {ORS=" "} { print $1}'|sort > $GEM_LIST_CACHE)
 }
 
 _get_gem_list () {
@@ -41,7 +41,7 @@ _gem()
 	    return 0
 	    ;;
 	"uninstall"|"unpack"|"update")
-	    local gemlist=$(gem list|grep -v "LOCAL GEMS"|awk 'BEGIN {ORS=" "} { print $1}'|sort)
+	    local gemlist=$(gem list|grep '([0-9].*)'|awk 'BEGIN {ORS=" "} { print $1}'|sort)
 	    COMPREPLY=($(compgen -W "${gemlist}" -- ${cur}))
 	    return 0
 	    ;;
