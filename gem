@@ -1,0 +1,56 @@
+GEM_LIST_CACHE=/tmp/gem_list.cache  # Gem cache file
+
+_fetch_gem_list () {
+    $(gem list -r | grep -v "REMOTE GEMS" | grep -v "Bulk updating" | awk 'BEGIN {ORS=" "} { print $1 | "sort"}' > $GEM_LIST_CACHE)
+}
+
+_get_gem_list () {
+
+    ONE_DAY_AGO=($(date +%s) - 86400)             # In seconds
+
+    if [ -f $GEM_LIST_CACHE ]; then
+	file_change_date=$(stat $GEM_LIST_CACHE | grep Change | cut -c 9-)
+	date_changed=$(date -d "$file_change_date" +%s)
+	if [ $date_changed -gt $ONE_DAY_AGO ]; then
+	    _fetch_gem_list
+	fi
+    else
+	_fetch_gem_list
+    fi
+
+    cat $GEM_LIST_CACHE
+}
+
+_gem()
+{
+    local cur prev commands 
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+    # The commands we will complete
+    commands="build cert check cleanup contents dependency environment fetch generate_index help install list lock mirror outdated pristine query rdoc search server sources specification uninstall unpack update which"
+
+    case "${prev}" in
+	"install" | "specification")
+	    local gemlist=$(_get_gem_list)
+	    COMPREPLY=($(compgen -W "${gemlist}" -- ${cur}))
+	    return 0
+	    ;;
+	"uninstall" | "unpack" | "update")
+	    local gemlist=$(gem list | grep -v "LOCAL GEMS" | awk 'BEGIN {ORS=" "} { print $1 | "sort"}')
+	    COMPREPLY=($(compgen -W "${gemlist}" -- ${cur}))
+	    return 0
+	    ;;
+	"help")
+	    COMPREPLY=($(compgen -W "${commands}" -- ${cur}))
+	    return 0
+	    ;;
+	*)
+	;;
+    esac
+
+    COMPREPLY=($(compgen -W "${commands}" -- ${cur}))
+    return 0
+}
+complete -F _gem gem    
