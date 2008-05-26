@@ -7,10 +7,9 @@ moment just gem auto-completion is a available.
 
 First clone this repository in the directory of your choice:
 
+From Gitorious:
   git clone git://gitorious.org/bash-completion-extras/mainline.git bash-completion-extras
-
-or
-
+or from GitHub
   git clone git://github.com/calas/bash-completion-extras.git 
 
 Move to the cloned directory
