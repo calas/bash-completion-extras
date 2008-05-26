@@ -1,10 +1,10 @@
-CUSTOM_BASH_COMPLETION_DIR="~/.bash_completion.d"
+MY_BASH_COMPLETION_DIR="~/.bash_completion.d"
 
-if [ -d $CUSTOM_BASH_COMPLETION_DIR -a -r $CUSTOM_BASH_COMPLETION_DIR -a \
-     -x $CUSTOM_BASH_COMPLETION_DIR ]; then
-	for i in $CUSTOM_BASH_COMPLETION_DIR/*; do
-		[[ ${i##*/} != @(*~|*.bak|*.swp|\#*\#|*.dpkg*|.rpm*) ]] &&
-			[ \( -f $i -o -h $i \) -a -r $i ] && . $i
-	done
+if [ -d $MY_BASH_COMPLETION_DIR -a -r $MY_BASH_COMPLETION_DIR -a \
+    -x $MY_BASH_COMPLETION_DIR ]; then
+    for i in $MY_BASH_COMPLETION_DIR/*; do
+	[[ ${i##*/} != @(*~|*.bak|*.swp|\#*\#|*.dpkg*|.rpm*) ]] &&
+	[ \( -f $i -o -h $i \) -a -r $i ] && . $i
+    done
 fi
 unset i

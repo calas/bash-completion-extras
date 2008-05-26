@@ -1,7 +1,7 @@
 GEM_LIST_CACHE=/tmp/gem_list.cache  # Gem cache file
 
 _fetch_gem_list () {
-    $(gem list -r | grep -v 'REMOTE GEMS\|[Uu]pdating' | awk 'BEGIN {ORS=" "} { print $1 | "sort"}' | grep -v '\.+' > $GEM_LIST_CACHE)
+    $(gem list -r|grep -v 'REMOTE GEMS\|[Uu]pdating'|awk 'BEGIN {ORS=" "} { print $1}'|sort|grep -v '\.+' > $GEM_LIST_CACHE)
 }
 
 _get_gem_list () {
@@ -12,7 +12,7 @@ _get_gem_list () {
     # (minimum corruption check)
     if [ -f $GEM_LIST_CACHE ] && [ $(ls -l $GEM_LIST_CACHE|awk '{print $5}') -gt 4096 ]
     then
-	file_change_date=$(stat $GEM_LIST_CACHE | grep Change | cut -c 9-)
+	file_change_date=$(stat $GEM_LIST_CACHE|grep Change|cut -c 9-)
 	date_changed=$(date -d "$file_change_date" +%s)
 	if [ $date_changed -gt $ONE_DAY_AGO ]; then
 	    _fetch_gem_list
@@ -35,13 +35,13 @@ _gem()
     commands="build cert check cleanup contents dependency environment fetch generate_index help install list lock mirror outdated pristine query rdoc search server sources specification uninstall unpack update which"
 
     case "${prev}" in
-	"install" | "specification")
+	"install"|"specification")
 	    local gemlist=$(_get_gem_list)
 	    COMPREPLY=($(compgen -W "${gemlist}" -- ${cur}))
 	    return 0
 	    ;;
-	"uninstall" | "unpack" | "update")
-	    local gemlist=$(gem list | grep -v "LOCAL GEMS" | awk 'BEGIN {ORS=" "} { print $1 | "sort"}')
+	"uninstall"|"unpack"|"update")
+	    local gemlist=$(gem list|grep -v "LOCAL GEMS"|awk 'BEGIN {ORS=" "} { print $1}'|sort)
 	    COMPREPLY=($(compgen -W "${gemlist}" -- ${cur}))
 	    return 0
 	    ;;
