@@ -10,6 +10,8 @@ desc "Install the package"
 task :install do
   puts "INSTALLING"
   puts "================================================================"
+  
+  check_bash_completion_dir
 
   DOT_FILES.each do |file|
     target = File.join(HOME, ".#{File.basename(file)}")
@@ -52,4 +54,11 @@ def check_and_install(file, target)
   `ln -nis #{File.expand_path file} #{target}`
   puts "Installed #{file} in #{target}"
   puts ""
+end
+
+def check_bash_completion_dir
+  unless File.exist?(BASH_COMPLETION_DIR)
+    puts "Creating directory in #{BASH_COMPLETION_DIR}"
+    Dir.mkdir(BASH_COMPLETION_DIR)
+  end
 end
