@@ -46,14 +46,19 @@ def check_and_install(file, target)
     if FORCE == true
       puts file_exists << "Unlinking."
       File.unlink(target)
+      link_file(file, target)
     else
       puts file_exists << "Use rake install force=true to override."
-      exit
     end
+  else
+    link_file(file, target)
   end
+  puts ""
+end
+
+def link_file(file, target)
   `ln -nis #{File.expand_path file} #{target}`
   puts "Installed #{file} in #{target}"
-  puts ""
 end
 
 def check_bash_completion_dir
