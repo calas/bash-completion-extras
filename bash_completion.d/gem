@@ -1,29 +1,3 @@
-GEM_LIST_CACHE=/tmp/gem_list.cache  # Gem cache file
-
-_fetch_gem_list () {
-    $(gem list -r|grep '([0-9].*)'|awk 'BEGIN {ORS=" "} { print $1}'|sort > $GEM_LIST_CACHE)
-}
-
-_get_gem_list () {
-
-    ONE_DAY_AGO=($(date +%s) - 86400)             # In seconds
-
-    # We check the gems list cache file exists and is bigger than 4k
-    # (minimum corruption check)
-    if [ -f $GEM_LIST_CACHE ] && [ $(ls -l $GEM_LIST_CACHE|awk '{print $5}') -gt 4096 ]
-    then
-	file_change_date=$(stat $GEM_LIST_CACHE|grep Change|cut -c 9-)
-	date_changed=$(date -d "$file_change_date" +%s)
-	if [ $date_changed -gt $ONE_DAY_AGO ]; then
-	    _fetch_gem_list
-	fi
-    else
-	_fetch_gem_list
-    fi
-
-    cat $GEM_LIST_CACHE
-}
-
 _gem()
 {
     local cur prev commands 
@@ -36,12 +10,12 @@ _gem()
 
     case "${prev}" in
 	"install"|"specification")
-	    local gemlist=$(_get_gem_list)
+	    local gemlist=$(gem list -r|grep '([0-9].*)'|awk 'BEGIN {ORS=" "} { print $1}'|sort)
 	    COMPREPLY=($(compgen -W "${gemlist}" -- ${cur}))
 	    return 0
 	    ;;
 	"uninstall"|"unpack"|"update")
-	    local gemlist=$(gem list|grep '([0-9].*)'|awk 'BEGIN {ORS=" "} { print $1}'|sort)
+	    local gemlist=$(gem list -l|grep '([0-9].*)'|awk 'BEGIN {ORS=" "} { print $1}'|sort)
 	    COMPREPLY=($(compgen -W "${gemlist}" -- ${cur}))
 	    return 0
 	    ;;
