@@ -30,4 +30,5 @@ _gem()
     COMPREPLY=($(compgen -W "${commands}" -- ${cur}))
     return 0
 }
-complete -F _gem gem    
+complete -F _gem gem
+complete -F _gem gem-e
