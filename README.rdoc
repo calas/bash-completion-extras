@@ -1,7 +1,12 @@
 == Bash Completion Extras
 
-This package contains some simple scripts for bash completion. At the
-moment just gem auto-completion is a available.
+This package contains some simple scripts for bash completion.
+
+At the moment, auto-completion is a available for:
+
+* gem
+* cheat
+* git
 
 == Installation
 
@@ -24,5 +29,10 @@ or
 
   rake install force=true
 
-to override existing files.
+to override existing symbolic links.
 
+== Support
+
+This is completely unsupported, I put it here just to share it. Use it
+at your own risk. But if you enhance it in some way I would appreciate
+if you share it with me, thought this is not mandatory.
